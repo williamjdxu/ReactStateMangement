@@ -1,2 +1,0 @@
-# ReactStateMangement
-Created with CodeSandbox
