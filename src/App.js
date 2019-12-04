@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import uuid from "uuid/v4";
+import filterReducer, { Action, FilterType } from "./Reducer"
 
 const initialTodos = [
   {
@@ -22,6 +23,7 @@ const initialTodos = [
 const App = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState(initialTodos);
+  const [filter, dispatchFilter] = useReducer(filterReducer, FilterType.ALL);
 
   const handleChangeInput = event => {
     setTask(event.target.value);
@@ -47,10 +49,43 @@ const App = () => {
     );
   };
 
+  const handleShowAll = () => {
+    dispatchFilter({ type: Action.SHOW_ALL})
+  }
+
+  const handleShowComplete = () => {
+    dispatchFilter({ type: Action.SHOW_COMPLETE})
+  }
+
+  const handleShowIncomplete = () => {
+    dispatchFilter({ type: Action.SHOW_INCOMPLETE})
+  }
+
+  const filteredTodos = todos.filter(todo => {
+    if(filter === FilterType.ALL) {
+      return true;
+    }
+
+    if(filter === FilterType.COMPLETE && todo.complete) {
+      return true;
+    }
+
+    if(filter === FilterType.INCOMPLETE && !todo.complete) {
+      return true;
+    }
+
+    return false;
+  })
+
   return (
     <div>
+      <div>
+        <button type="button" onClick={handleShowAll}>Show All</button>
+        <button type="button" onClick={handleShowComplete}>Show Complete</button>
+        <button type="button" onClick={handleShowIncomplete}>Show handleShowIncomplete</button>
+      </div>
       <ul>
-        {todos.map(todo => (
+        {filteredTodos.map(todo => (
           <li key={todo.id}>
             <label>
               <input
