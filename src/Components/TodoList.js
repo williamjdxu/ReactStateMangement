@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ActionTodo as Action } from "/src/Reducer";
+import TodoContext from "/src/Context";
 
-const TodoItem = ({ dispatch, todo }) => {
+const TodoItem = ({ todo }) => {
+  const dispatch = useContext(TodoContext);
+
   const handleChange = () =>
     dispatch({
       type: todo.complete ? Action.UNDO_TODO : Action.DO_TODO,

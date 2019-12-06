@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import uuid from "uuid/v4";
+import TodoContext from "./Context";
 import filterReducer, { FilterType, todoReducer } from "./Reducer";
 import Filter from "./Components/Filter";
 import TodoList from "./Components/TodoList";
@@ -26,16 +27,14 @@ const initialTodos = [
 const App = () => {
   const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
   const [filter, dispatchFilter] = useReducer(filterReducer, FilterType.ALL);
-
+  
   const filteredTodos = todos.filter(todo => {
     if(filter === FilterType.ALL) {
       return true;
     }
-
     if(filter === FilterType.COMPLETE && todo.complete) {
       return true;
     }
-
     if(filter === FilterType.INCOMPLETE && !todo.complete) {
       return true;
     }
@@ -44,11 +43,11 @@ const App = () => {
   })
 
   return (
-    <div>
+    <TodoContext.Provider value={dispatchTodos}>
       <Filter dispatch={dispatchFilter} />
-      <TodoList dispatch={dispatchTodos} todos={filteredTodos} />
-      <AddTodo dispatch={dispatchTodos} />
-    </div>
+      <TodoList todos={filteredTodos} />
+      <AddTodo />
+    </TodoContext.Provider>
   );
 };
 
