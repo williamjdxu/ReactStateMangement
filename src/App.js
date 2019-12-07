@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import uuid from "uuid/v4";
-import TodoContext from "./Context";
+import DispatchContext from "./Context";
 import filterReducer, { FilterType, todoReducer } from "./Reducer";
 import Filter from "./Components/Filter";
 import TodoList from "./Components/TodoList";
@@ -27,27 +27,36 @@ const initialTodos = [
 const App = () => {
   const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
   const [filter, dispatchFilter] = useReducer(filterReducer, FilterType.ALL);
-  
-  const filteredTodos = todos.filter(todo => {
-    if(filter === FilterType.ALL) {
+
+  // Global Dispatch Function
+  const dispatch = action =>
+    [dispatchTodos, dispatchFilter].forEach(fn => fn(action));
+  // Global State
+  const state = {
+    todos,
+    filter
+  };
+
+  const filteredTodos = state.todos.filter(todo => {
+    if (state.filter === FilterType.ALL) {
       return true;
     }
-    if(filter === FilterType.COMPLETE && todo.complete) {
+    if (state.filter === FilterType.COMPLETE && todo.complete) {
       return true;
     }
-    if(filter === FilterType.INCOMPLETE && !todo.complete) {
+    if (state.filter === FilterType.INCOMPLETE && !todo.complete) {
       return true;
     }
 
     return false;
-  })
+  });
 
   return (
-    <TodoContext.Provider value={dispatchTodos}>
-      <Filter dispatch={dispatchFilter} />
+    <DispatchContext.Provider value={dispatch}>
+      <Filter />
       <TodoList todos={filteredTodos} />
       <AddTodo />
-    </TodoContext.Provider>
+    </DispatchContext.Provider>
   );
 };
 

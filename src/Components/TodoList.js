@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { ActionTodo as Action } from "/src/Reducer";
-import TodoContext from "/src/Context";
+import DispatchContext from "/src/Context";
 
 const TodoItem = ({ todo }) => {
-  const dispatch = useContext(TodoContext);
+  const dispatch = useContext(DispatchContext);
 
   const handleChange = () =>
     dispatch({
       type: todo.complete ? Action.UNDO_TODO : Action.DO_TODO,
-      id: todo.id,
+      id: todo.id
     });
   return (
     <li>

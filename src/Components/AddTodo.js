@@ -1,17 +1,17 @@
 import React, { useState, useContext } from "react";
 import uuid from "uuid/v4";
 import { ActionTodo as Action } from "/src/Reducer";
-import TodoContext from "/src/Context";
+import DispatchContext from "/src/Context";
 
 const AddTodo = () => {
-  const [task, setTask] = useState('');
-  const dispatch = useContext(TodoContext);
+  const [task, setTask] = useState("");
+  const dispatch = useContext(DispatchContext);
 
   const handleSubmit = event => {
     if (task) {
       dispatch({ type: Action.ADD_TODO, task, id: uuid() });
     }
-    setTask('');
+    setTask("");
     event.preventDefault();
   };
 
