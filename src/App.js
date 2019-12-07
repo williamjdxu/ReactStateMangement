@@ -5,6 +5,7 @@ import filterReducer, { FilterType, todoReducer } from "./Reducer";
 import Filter from "./Components/Filter";
 import TodoList from "./Components/TodoList";
 import AddTodo from "./Components/AddTodo";
+import combinedReducer from "./Dispatch";
 
 const initialTodos = [
   {
@@ -25,17 +26,10 @@ const initialTodos = [
 ];
 
 const App = () => {
-  const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
-  const [filter, dispatchFilter] = useReducer(filterReducer, FilterType.ALL);
-
-  // Global Dispatch Function
-  const dispatch = action =>
-    [dispatchTodos, dispatchFilter].forEach(fn => fn(action));
-  // Global State
-  const state = {
-    todos,
-    filter
-  };
+  const [state, dispatch] = combinedReducer({
+    filter: useReducer(filterReducer, FilterType.ALL),
+    todos: useReducer(todoReducer, initialTodos)
+  });
 
   const filteredTodos = state.todos.filter(todo => {
     if (state.filter === FilterType.ALL) {
